@@ -1,9 +1,10 @@
 import sys
 import csv
 import time
+import tracemalloc
 start_time = time.time()
 
-
+tracemalloc.start()
 # 1) Read French Dictionary and stored all the values in py dictionary
 french_dictionary = {}
 with open('french_dictionary.csv', mode='r') as csv_file:
@@ -24,6 +25,8 @@ f.close()
 # 3) Intializing a list for counting the replacement
 freq_count = []
 
+dict_count = dict.fromkeys(fw, 0)
+
 # 4) Read the file which need changes to it.
 with open('t8.shakespeare.txt', 'r+') as fil:
     lines = fil.read()
@@ -31,8 +34,23 @@ fil.close()
 
 for i in fw:
     freq_count.append([i, french_dictionary[i], lines.count(i)])
+    dict_count[i] += lines.count(i)
     lines = lines.replace(i, french_dictionary[i])
+
+for i in fw:
+    freq_count.append([i, french_dictionary[i], lines.count(i)])
+    dict_count[i] += lines.count(i.upper())
+    lines = lines.replace(i, french_dictionary[i].upper())
+
+for i in fw:
+    freq_count.append([i, french_dictionary[i], lines.count(i)])
+    dict_count[i] += lines.count(i.capitalize())
+    lines = lines.replace(i, french_dictionary[i].capitalize())
     
+for i in fw:
+    freq_count.append([i, french_dictionary[i], dict_count[i]])
+
+
 # 5) Modifying the original Text file
 with open('t8.shakespeare.txt', 'w') as fi:
     fi.write(lines)
@@ -45,5 +63,8 @@ with open(filename, 'w') as csvfile:
     wrote.writerows(freq_count) 
 csvfile.close()
 
-# 7) printing the time of execution.
+# 7) printing the memory and  time of execution.
+print("Memory in bits:" ,tracemalloc.get_traced_memory()[1] - tracemalloc.get_traced_memory()[0])
+tracemalloc.stop()
+
 print("Time taken for execution :  %s sec" % (time.time() - start_time))
