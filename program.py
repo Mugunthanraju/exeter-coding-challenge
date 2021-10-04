@@ -32,38 +32,38 @@ with open('t8.shakespeare.txt', 'r+') as fil:
     lines = fil.read()
 fil.close()
 
+# 5.a) For lower case
 for i in fw:
-    freq_count.append([i, french_dictionary[i], lines.count(i)])
-    dict_count[i] += lines.count(i)
-    lines = lines.replace(i, french_dictionary[i])
+    dict_count[i] += lines.count(i.lower())
+    lines = lines.replace(i.lower(), french_dictionary[i])
 
+# 5.b) For lower case
 for i in fw:
-    freq_count.append([i, french_dictionary[i], lines.count(i)])
     dict_count[i] += lines.count(i.upper())
-    lines = lines.replace(i, french_dictionary[i].upper())
+    lines = lines.replace(i.upper(), french_dictionary[i].upper())
 
+# 5.c) For lower case
 for i in fw:
-    freq_count.append([i, french_dictionary[i], lines.count(i)])
     dict_count[i] += lines.count(i.capitalize())
-    lines = lines.replace(i, french_dictionary[i].capitalize())
+    lines = lines.replace(i.capitalize(), french_dictionary[i].capitalize())
     
 for i in fw:
     freq_count.append([i, french_dictionary[i], dict_count[i]])
 
 
-# 5) Modifying the original Text file
+# 6) Modifying the original Text file
 with open('t8.shakespeare.txt', 'w') as fi:
     fi.write(lines)
 fi.close()
 
-# 6) Storing the frequency in csv file.
+# 7) Storing the frequency in csv file.
 filename = "frequency.csv"  
 with open(filename, 'w') as csvfile: 
     wrote = csv.writer(csvfile) 
     wrote.writerows(freq_count) 
 csvfile.close()
 
-# 7) printing the memory and  time of execution.
+# 8) printing the memory and  time of execution.
 print("Memory in bits:" ,tracemalloc.get_traced_memory()[1] - tracemalloc.get_traced_memory()[0])
 tracemalloc.stop()
 
